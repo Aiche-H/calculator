@@ -1,3 +1,5 @@
+import { calculateResult, clearScreen, eraseLastEntry, backspace, divide, multiply, subtract, add, negate, square, squareRoot, calculatePercentage, calculateReciprocal } from './math.js';
+
 const screen = document.getElementById('screen');
 const buttonPercent = document.getElementById('buttonPercent');
 const buttonClearEntry = document.getElementById('buttonClearEntry');
@@ -37,58 +39,57 @@ const buttons = [
 
   
   
-  buttons.forEach(button => {
-    button.addEventListener('click', () => {
-      const buttonValue = button.textContent;
-      if (buttonValue === '=') {
-        // Calculate the result
-        const result = eval(screenValue);
-        screenValue = result.toString();
-      } else if (buttonValue === 'C') {
-        // Clear the screen
-        screenValue = '';
-      } else if (buttonValue === 'CE') {
-        // Erase the last number or operation
-        screenValue = screenValue.slice(0, -1);
-      } else if (buttonValue === '⌫') {
-        // Backspace
-        screenValue = screenValue.slice(0, -1);
-      } else if (buttonValue === '/') {
-        // Append division operator to screen value
-        screenValue += '/';
-      } else if (buttonValue === '*') {
-        // Append multiplication operator to screen value
-        screenValue += '*';
-      } else if (buttonValue === '√') {
-        var value = eval(screenValue);
-        if (value < 0) {
-          screenValue = "Error: Square root of negative number";
-        } else {
-          screenValue = Math.sqrt(value);
-        }
-      } else if (buttonValue === 'x^2') {
-        // Calculate the square of the current value
-        screenValue = eval(screenValue) ** 2;
-      } else if (buttonValue === '%') {
-        // Calculate the percentage of the current value
-        screenValue = eval(screenValue) / 100;
-      } else if (buttonValue === '1/x') {
-        // Append reciprocal operator to screen value
-        screenValue += '1 / ' + screenValue;
-      } else if (buttonValue === '¬') {
-        // Negate the current value
-        if (screenValue !== '') {
-          if (screenValue.startsWith('-')) {
-            screenValue = screenValue.substring(1);
-          } else {
-            screenValue = '-' + screenValue;
-          }
-        }
-      } else {
-        // Append button value to screen value
-        screenValue += buttonValue;
-      }
-      // Update the screen
+buttons.forEach(button => {
+  button.addEventListener('click', () => {
+    const buttonValue = button.textContent;
+    if (buttonValue === '=') {
+      // Calculate the result
+      const result = calculateResult(screenValue);
+      screenValue = result.toString();
+    } else if (buttonValue === 'C') {
+      // Clear the screen
+      screenValue = clearScreen();
       screen.textContent = screenValue;
-    });
+    } else if (buttonValue === 'CE') {
+      // Erase the last number or operation
+      screenValue = eraseLastEntry(screenValue);
+      screen.textContent = screenValue;
+    } else if (buttonValue === '⌫') {
+      // Backspace
+      screenValue = backspace(screenValue);
+      screen.textContent = screenValue;
+    } else if (buttonValue === '/') {
+      // Append division operator to screen value
+      screenValue += divide();
+    } else if (buttonValue === '*') {
+      // Append multiplication operator to screen value
+      screenValue += multiply();
+    } else if (buttonValue === '+') {
+      // Append addition operator to screen value
+      screenValue += add();
+    } else if (buttonValue === '-') {
+      // Append subtraction operator to screen value
+      screenValue += subtract();
+    } else if (buttonValue === '√') {
+      // Calculate square root
+      screenValue = squareRoot(screenValue);
+    } else if (buttonValue === 'x^2') {
+      // Calculate the square of the current value
+      screenValue = square(screenValue);
+    } else if (buttonValue === '%') {
+      // Calculate the percentage of the current value
+      screenValue = calculatePercentage(screenValue);
+    } else if (buttonValue === '¬') {
+      // Negate the current value
+      screenValue = negate(screenValue);
+    } else if (buttonValue === '1/x') {
+      // Calculate the reciprocal of the current value
+      screenValue = calculateReciprocal(screenValue);
+    } else {
+      // Append button value to screen value
+      screenValue += buttonValue;
+    }
+    // Update the screen
+    screen.textContent = screenValue;
   });
+});
